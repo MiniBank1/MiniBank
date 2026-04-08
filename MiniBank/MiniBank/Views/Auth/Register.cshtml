@@ -1,0 +1,85 @@
+﻿@using MiniBank.Controllers
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Form</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <script src="js/site.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrapper register-wrapper">
+            <div class="form-box" id="login-form">
+                <form asp-action="Register" class="form-group" method="post">
+                    <h1>Register</h1>
+                    <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-id-card-fill"></i>
+                            <input type="text" placeholder="TC No" id="tcno" name="TcNo" required />
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-user-line"></i>
+                            <input type="text" placeholder="User Name" id="username" name="UserName" required />
+                        </div>
+                   </div>
+
+                   <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-user-line"></i>
+                            <input type="text" placeholder="User Surname" id="usersurname" name="UserSurname" required />
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-mail-line"></i>
+                            <input type="text" placeholder="Email" id="email" name="Email" required />
+                        </div>
+                   </div>
+                        
+                   <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-lock-password-fill"></i>
+                            <input type="password" placeholder="Password" id="password" name="Password" required />
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-lock-password-fill"></i>
+                            <input type="password" placeholder="Confirim Password" id="confirmpassword" name="ConfirmPassword" required />
+                        </div>
+                   </div>
+                       
+                   
+
+                    <div class="btn-container">
+                        <button type="submit" class="btn">Register</button>
+                    </div>
+
+                    @if (ViewData["ErrorMessage"] != null)
+                    {
+                        <div class="error-msg" style="color: #ff4d4d; margin-top: 15px; text-align: center;">
+                            <strong>@ViewData["ErrorMessage"]</strong>
+                        </div>
+                    }
+
+                </form>
+
+                <div class="register-link">
+                    <p>Do you already have an account? <a href="/Auth/Login">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

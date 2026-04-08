@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Nova Bank</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <form asp-action="Login" method="post" autocomplete="off">
+                @Html.AntiForgeryToken()
+                <h1>Nova <span>Bank</span> </h1>
+
+                <div class="input-box">
+                    <div class="input-field">
+                        <i class="ri-user-line"></i>
+                        <input type="text" placeholder="Email" id="email" name="Email" required />
+                    </div>
+
+                    <div class="input-field">
+                        <i class="ri-lock-password-fill"></i>
+                        <input type="password" placeholder="Password" id="password" name="Password" required />
+                    </div>
+                </div>
+
+                <div class="forgotpassword-link">
+                    <p>Did you forget your password? <a href="/Auth/ForgotPassword">Forgot Password</a></p>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn">Login</button>
+                </div>
+
+                @if (ViewData["ErrorMessage"] != null)
+                {
+                    <div class="error-msg" style="color: #ff4d4d; margin-top: 15px; text-align: center;">
+                        <strong>@TempData["ErrorMessage"]</strong>
+                    </div>
+                }
+            </form>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="/Auth/Register">Register</a></p>
+            </div>
+
+             
+        </div>
+    </div>
+</body>
+</html>

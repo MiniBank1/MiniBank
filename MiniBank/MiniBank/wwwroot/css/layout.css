@@ -1,0 +1,1053 @@
+﻿
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    
+    background: #01003f;
+    color: #fff; 
+    min-height: 100vh;
+    background: radial-gradient(circle at top right, #02014d, #01003f);
+    overflow-x: hidden;
+    
+}
+
+.logo {
+    position: relative;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 8%;
+    /* Arkaplanı tamamen şeffaf yapıyoruz */
+    background: transparent !important;
+    /* Çizgiyi ve gölgeyi tamamen sıfırlıyoruz */
+    border: none !important;
+    box-shadow: none !important;
+    /* Eğer sayfa kayınca yazıların okunmasını istersen blur kalabilir, 
+       ama geçişi bozuyorsa bunu da silebilirsin */
+    backdrop-filter: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+    .header a,
+    .navbar a,
+    .logo,
+    .header-right a {
+        text-decoration: none !important;
+    }
+
+        /* Hover (üzerine gelince) durumunda da çizgi çıkmasın istersen */
+        .header a:hover,
+        .navbar a:hover {
+            text-decoration: none !important;
+        }
+
+.navbar {
+    position: relative;
+    margin-right: 50px;
+}
+
+    .navbar a {
+        font-size: 18px;
+        color: #fff;
+        font-weight: 500;
+        margin: 0 20px;
+        transition: .3s;
+    }
+
+    .navbar i {
+        font-size: 20px;
+        color: #42c1e8;
+        margin-right: 15px;
+    }
+
+    .navbar a:hover, .navbar a.active {
+        color: #42c1e8;
+    }
+
+
+.animate {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #01003f;
+    animation: show-right 1s ease-out forwards;
+    animation-delay: calc(.3s * var(--i));
+}
+
+    .animate.bg {
+        animation: fade-in 1s ease-out forwards;
+        animation-delay: 3.2s;
+    }
+
+@keyframes show-right {
+    100% {
+        width: 0;
+    }
+}
+
+@keyframes fade-in {
+    100% {
+        opacity: 0;
+    }
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 25px; 
+    position: relative;
+   
+}
+
+.nav-notification {
+    text-decoration: none !important;
+}
+
+.nav-notification:hover {
+    color: #42c1e8 !important;
+    transition: .3s;
+}
+
+.btn-nova {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 28px;
+    font-size: 14px;
+    background: #42c1e8;
+    border: 2px solid #42c1e8;
+    border-radius: 6px;
+    color: #01003f;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: .3s;
+    white-space: nowrap;
+    text-decoration: none !important;
+}
+
+    .btn-nova:hover {
+        background: transparent;
+        color: #42c1e8;
+    }
+
+/* Dashboard Sayfası Genel Konteynır */
+.dashboard-container {
+    margin-top: 150px;
+    text-align: center;
+}
+
+/* Ana Kart Yapısı */
+.iban-card {
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    padding: 18px 54px;
+    border-radius: 20px;
+    display: inline-block;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    min-width: 1300px;
+    transition: 0.3s ease;
+    position: relative; /* Ok ve buton konumlandırması için */
+}
+
+    .iban-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    }
+
+/* Başlık ve Etiketler */
+.iban-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.iban-label {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.iban-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #00ffcc;
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+/* Satır Düzeni */
+.balance-row {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Bakiye Kutusu ve Elemanları */
+.balance-item {
+    width: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+    .balance-item:hover {
+        background-color: rgba(255,255,255,0.07);
+        border-radius: 8px;
+    }
+
+.balance-left {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.balance-title {
+    font-size: 15px;
+    color: #aaa;
+}
+
+.balance-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ffcc;
+    margin-top: 4px;
+}
+
+.balance-arrow {
+    font-size: 22px;
+    color: #aaa;
+    margin-left: 15px;
+}
+
+.balance-hr {
+    display: block !important;
+    width: 340px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    margin: 20px 0 !important;
+    opacity: 1 !important;
+}
+
+/* Küçültülmüş Transfer Butonu */
+.btn-transfer-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin-top: 0;
+}
+
+    .btn-transfer-action:hover {
+        background: linear-gradient(135deg, #2c2c54, #3a3a70) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    /*Transfer Kayıt*/
+.transaction-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.transaction-square-card {
+    width: 380px;
+    
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    margin-top: 50px;
+}
+
+.transaction-title {
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.transaction-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.type-label {
+    color: #ffffff; 
+    font-size: 14px;
+}
+
+.date-label {
+    color: #aaa; 
+    font-size: 11px;
+}
+
+.transaction-amount {
+    color: #00ffcc; 
+    font-weight: 700;
+}
+.empty-text {
+    color: #555;
+    text-align: center;
+    font-size: 13px;
+    padding: 20px 0;
+}
+
+.btn-logout-minimal {
+    color: #fff; 
+    font-size: 24px; 
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-logout-minimal:hover {
+        color: #ffffff; 
+        transform: scale(1.1); 
+        text-decoration: none !important;
+    }
+
+/* Modal içindeki scrollbarı özelleştir */
+#notificationModal .modal-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+#notificationModal .modal-body::-webkit-scrollbar-thumb {
+    background: #42c1e8;
+    border-radius: 10px;
+}
+
+
+/* GENEL KAPSAYICI */
+.transfer-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 140px 20px 40px 20px;
+    width: 100%;
+    gap: 30px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   1. KART: INTERNAL (KENDİ HESAPLARIM) 
+   ========================================= */
+.internal-card {
+    background: linear-gradient(135deg, #1e1e2f 0%, #161625 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 25px 35px;
+    width: 100%;
+    max-width: 1350px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.internal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #42c1e8;
+}
+
+.internal-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.internal-acc-box {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 18px;
+    border-radius: 10px;
+    flex: 2;
+    min-height: 85px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.internal-active {
+    border-color: rgba(66, 193, 232, 0.5);
+    background: rgba(66, 193, 232, 0.08);
+}
+
+.internal-label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.internal-acc-info strong {
+    display: block;
+    font-size: 14px;
+    color: #eee;
+}
+
+.internal-acc-info small {
+    color: #42c1e8;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.internal-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    height: 48px;
+    border-radius: 8px;
+    color: #00ffcc;
+    outline: none;
+}
+
+.internal-input-wrapper {
+    position: relative;
+}
+
+.internal-currency {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #42c1e8;
+    font-weight: bold;
+}
+
+.internal-swap-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #42c1e8;
+    color: #01003f;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+}
+
+.internal-confirm-btn {
+    height: 48px;
+    padding: 0 30px;
+    background: #42c1e8;
+    color: #01003f;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.internal-swap-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Bu değer ikonun altındaki boşluğu artırarak onu yukarı iter */
+    margin-bottom: 25px;
+}
+
+/* 1. Miktar (Amount) kutusunu yukarı taşı */
+.internal-amount-box {
+    margin-bottom: 20px; /* Alt hizadan biraz yukarı kaldırır */
+}
+
+/* 2. Onayla butonunu yukarı taşı */
+.internal-submit-wrapper {
+    margin-bottom: 20px; /* Miktar kutusuyla aynı hizaya getirir */
+}
+
+/* 1. KART BUTONU: İSTEDİĞİN ÖZEL STİL */
+.internal-confirm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Genişlik ve İç Boşluk */
+    padding: 14px 24px;
+    height: auto; /* Sabit 48px varsa devre dışı kalsın */
+    /* Yazı Stili */
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff !important;
+    text-decoration: none;
+    white-space: nowrap;
+    /* Arka Plan ve Çerçeve */
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    /* Efektler */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    /* Hizalama (Yukarıda istediğin gibi biraz boşluk bırakır) */
+    margin-top: 30px;
+}
+
+    /* HOVER (Üzerine Gelince) */
+    .internal-confirm-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        background: linear-gradient(135deg, #2c2c54, #3a3a6e) !important;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* AKTİF (Tıklayınca) */
+    .internal-confirm-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    }
+
+/* =========================================
+   2. KART: EXTERNAL (BAŞKA HESABA)
+   ========================================= */
+.external-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #12121f 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 25px 35px;
+    width: 100%;
+    max-width: 1350px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.external-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #00ffcc; /* Farklı bir renk verdim ayrışması için */
+}
+
+.external-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+
+.external-acc-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 18px;
+    border-radius: 10px;
+    flex: 2;
+    min-height: 85px;
+    position: relative;
+    cursor: pointer;
+}
+
+.external-active {
+    border-color: rgba(0, 255, 204, 0.4);
+    background: rgba(0, 255, 204, 0.05);
+}
+
+.external-label {
+    font-size: 10px;
+    color: #777;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.external-acc-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.external-acc-info small {
+    display: block;
+    font-size: 12px;
+    color: #00ffcc;
+}
+
+.external-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    height: 48px;
+    border-radius: 8px;
+    color: #fff;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.external-iban-box {
+    flex: 3;
+}
+
+.external-amount-box {
+    flex: 1.5;
+    position: relative;
+}
+
+.external-type-box {
+    flex: 1.5;
+}
+
+.external-desc-box {
+    flex: 2;
+}
+
+.external-input-wrapper {
+    position: relative;
+}
+
+.external-currency {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00ffcc;
+}
+
+.external-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffcc'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 35px;
+    cursor: pointer;
+}
+
+    .external-select option {
+        background-color: #ffffff !important; /* Liste açıldığında da beyaz kalsın */
+        color: #12121f !important;
+    }
+
+.external-confirm-btn {
+    height: 48px;
+    padding: 0 30px;
+    background: #00ffcc;
+    color: #12121f;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 23px;
+    transition: all 0.3s ease; /* Geçiş süresini daha yumuşak yaptık */
+    box-shadow: 0 4px 12px rgba(0, 255, 204, 0.2);
+    margin-bottom: 25px;
+}
+
+    .external-confirm-btn:hover {
+        transform: translateY(-3px); /* Butonu yukarı kaldırır */
+        box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3); /* Turkuaz parlamayı artırır */
+        background: #00ffcc; /* Rengi sabit tutuyoruz */
+        filter: brightness(1.1); /* Hafif bir parlaklık vererek canlılık katar */
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .external-confirm-btn:active {
+        transform: translateY(0); /* Basıldığında eski yerine iner */
+        box-shadow: 0 4px 8px rgba(0, 255, 204, 0.2); /* Gölgeyi küçültür */
+        filter: brightness(0.9); /* Basılma hissi için hafif karartır */
+    }
+
+.external-selector-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #555;
+}
+
+#active-account-balance {
+    color: #00ffcc; /* Rakam senin turkuaz renginde */
+    font-weight: 600;
+}
+
+.external-submit-wrapper {
+    margin-top: 18px;
+    margin-top: 0;
+}
+
+/* ORTAK KART TASARIMI (Hem Özet Hem Sanal Kart Kapsayıcısı İçin) */
+.summary-card, .virtual-standalone-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #12121f 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 25px 35px;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* BAŞLIKLAR (Account Details & Virtual Card Details) */
+.summary-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #00ffcc;
+    position: relative;
+}
+
+/* Delete Card Button */
+.btn-terminate-card {
+    margin-left: auto; 
+    background: transparent;
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    color: #ff4d4d;
+    padding: 6px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    
+}
+
+    .btn-terminate-card i {
+        font-size: 16px;
+    }
+
+    .btn-terminate-card:hover {
+        background: rgba(255, 77, 77, 0.1);
+        border-color: #ff4d4d;
+        box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .btn-terminate-card:active {
+        transform: translateY(0);
+    }
+
+/* Kart Olmadığı Durumdaki Alan */
+.v-card-placeholder-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.placeholder-content i {
+    font-size: 50px;
+    color: rgba(0, 255, 204, 0.2);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.placeholder-content h3 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.placeholder-content p {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Yeni Kart Oluşturma Butonu */
+.btn-create-vcard {
+    background: #00ffcc;
+    color: #12121f;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+    /* İkonun Kendisi İçin Özel Ayar */
+    .btn-create-vcard i {
+        font-size: 20px; /* Artı işaretini biraz büyüttük */
+        font-weight: 800; /* Daha kalın görünmesi için */
+        display: inline-block;
+        line-height: 1;
+        color: #12121f !important; /* İkonun rengini garantiye alıyoruz */
+    }
+
+    .btn-create-vcard:hover {
+        background: #05ffda;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(0, 255, 204, 0.4);
+    }
+
+    /* Tıklama Anı */
+    .btn-create-vcard:active {
+        transform: translateY(-1px);
+    }
+
+
+/* --- HESAP ÖZETİ (ÜST KART) ÖZEL STİLLERİ --- */
+.summary-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.summary-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 10px;
+    flex: 1;
+    min-height: 80px;
+}
+
+.flex-3 {
+    flex: 2.5;
+}
+
+.summary-label {
+    font-size: 10px;
+    color: #777;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+    display: block;
+}
+
+.summary-info {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 45px;
+}
+
+    .summary-info strong {
+        display: block;
+        font-size: 16px;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+.iban-text, .balance-text {
+    color: #00ffcc !important;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    color: #00ffcc;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.summary-selector {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(66, 193, 232, 0.2) !important;
+}
+
+    .summary-selector:hover {
+        background: rgba(66, 193, 232, 0.08) !important;
+        transform: translateY(-2px);
+    }
+
+.summary-select-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #42c1e8;
+    font-size: 20px;
+}
+
+/* --- SANAL KART (ALT KART) ÖZEL STİLLERİ --- */
+.v-card-display-area {
+    display: flex;
+    justify-content: center;
+    padding: 50px 0;
+    /* Kartın daha iyi odaklanması için iç kısma hafif bir gölge */
+   
+    border-radius: 12px;
+}
+
+.nova-physical-skin {
+    width: 500px;
+    height: 260px;
+    background: #01003f; /* İstediğin o koyu lacivert tonu */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    position: relative;
+    padding: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.v-chip-gold {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 55px;
+    height: 40px;
+    background: linear-gradient(135deg, #f0d078 0%, #a88a38 100%);
+    border-radius: 8px;
+}
+
+.v-card-logo {
+    position: absolute;
+    top: 35px;
+    right: 30px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 22px;
+}
+
+    .v-card-logo span {
+        color: #42c1e8;
+    }
+
+.v-num-display {
+    position: absolute;
+    top: 55%;
+    left: 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    color: #fff;
+    letter-spacing: 3px;
+}
+
+.v-footer-info {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    display: flex;
+    align-items: flex-end;
+    gap: 30px;
+}
+
+.v-field {
+    display: flex;
+    flex-direction: column;
+}
+
+    .v-field small {
+        font-size: 9px;
+        color: #42c1e8;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+    }
+
+    .v-field span {
+        font-size: 14px;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+.v-visa {
+    margin-left: auto;
+    font-size: 35px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1;
+}
+
+.flex-2 {
+    flex: 1.5;
+}
+
+/* MODAL & LİSTE DÜZENLEMELERİ */
+.list-group-item-action:hover {
+    background-color: #42c1e8 !important;
+    color: #01003f !important;
+}
+
+/* TEMİZLİK */
+.v-card-side-info, .cvv-glow, .v-status-pill, .v-status-active, .v-highlight {
+    display: none !important;
+}
+
+/* Pop-up Account Hover */
+.account-switcher-custom .list-group-item-action {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease;
+}
+
+    
+    .account-switcher-custom .list-group-item-action:hover {
+        background-color: rgba(66, 193, 232, 0.1) !important; 
+        border-color: #42c1e8 !important;
+    }
+
+        
+        .account-switcher-custom .list-group-item-action:hover strong,
+        .account-switcher-custom .list-group-item-action:hover small {
+            color: #fff !important; 
+            opacity: 1 !important;
+        }
+
+
+.account-switcher-custom .bg-black.bg-opacity-25 {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    border-style: dashed !important; 
+}
+

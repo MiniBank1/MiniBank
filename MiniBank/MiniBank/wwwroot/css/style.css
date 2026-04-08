@@ -1,0 +1,195 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('../images/img.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.wrapper {
+    width: 450px;
+    border: 2px solid rgba(255, 255, 255, .2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+}
+
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+        
+
+.input-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-field {
+    position: relative;
+    width: 100%;
+    height: 55px;
+    margin: 10px 0;
+}
+
+    .input-field input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, .2);
+        outline: none;
+        font-size: 16px;
+        color: #fff;
+        border-radius: 30px;
+        padding: 0 20px 0 45px;
+        box-sizing: border-box;
+        transition: 0.3s;
+    }
+
+        .input-field input::placeholder {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+    .input-field i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .input-field input:focus {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+    .wrapper .btn:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: scale(1.02);
+    }
+
+
+.register-link {
+    text-align: center;
+    margin-top: 25px;
+}
+
+    .register-link p {
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .register-link p a {
+            color: #fff; 
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 0px;
+            transition: 0.3s;
+        }
+
+            .register-link p a:hover {
+                text-decoration: underline;
+            }
+
+.error-msg {
+    text-align: center;
+    font-size: 14px;
+}
+
+
+
+.register-wrapper {
+    width: 650px; 
+}
+
+   
+    .register-wrapper .input-box {
+        display: flex;
+        flex-direction: row; 
+        justify-content: space-between;
+        flex-wrap: wrap; 
+    }
+
+    
+    .register-wrapper .input-field {
+        width: 48%; 
+    }
+
+       
+        .register-wrapper .input-field.full-width {
+            width: 100%;
+        }
+.forgotpassword-link {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.forgotpassword-link p {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+    .forgotpassword-link p a {
+        color: #fff; 
+        text-decoration: none;
+        font-weight: 700;
+        margin-left: 0px;
+        transition: 0.3s;
+    }
+
+        
+        .forgotpassword-link p a:hover {
+            text-decoration: underline;
+        }
