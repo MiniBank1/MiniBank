@@ -1,0 +1,296 @@
+﻿@model Application.DTOs.AccountPageDto
+@{
+    ViewData["Title"] = "Accounts";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="transfer-page-wrapper">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" style="margin-bottom: 15px;">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" style="margin-bottom: 15px;">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="summary-card" style="position: relative;">
+        <div class="summary-header">
+            <i class="ri-bank-card-line"></i>
+            <span>Account Details</span>
+        </div>
+
+        <div class="summary-row">
+            <div class="summary-box summary-selector" data-bs-toggle="modal" data-bs-target="#accountSummaryModal">
+                <span class="summary-label">ACCOUNT TYPE</span>
+                <div class="summary-info">
+                    <strong id="sum-account-type">@(Model.DemandAccount?.AccountType ?? "Select")</strong>
+                    <small class="status-badge">Active</small>
+                </div>
+                <div class="summary-select-icon">
+                    <i class="ri-arrow-down-s-line"></i>
+                </div>
+            </div>
+
+            <div class="summary-box flex-3">
+                <span class="summary-label">IBAN NUMBER</span>
+                <div class="summary-info">
+                    <strong id="sum-iban" class="iban-text">@(Model.DemandAccount?.Iban)</strong>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <span class="summary-label">TOTAL BALANCE</span>
+                <div class="summary-info">
+                    <strong id="sum-balance" class="balance-text">@(Model.DemandAccount?.Balance.ToString("N2")) ₺</strong>
+                </div>
+            </div>
+        </div>
+        <span class="animate" style="--i:1;"></span>
+    </div>
+
+    @if (Model.HasTimeDepositAccount)
+    {
+        <div id="delete-time-deposit-section" style="display: none; margin-top: 15px; position: relative;">
+            <form asp-controller="Account" asp-action="DeleteTimeDepositAccount" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit"
+                        class="btn btn-outline-danger w-100 py-2 shadow-sm"
+                        style="font-weight: 600;">
+                    <i class="ri-delete-bin-line me-2"></i> Delete Time Deposit Account
+                </button>
+            </form>
+            <span class="animate" style="--i:2;"></span>
+        </div>
+    }
+
+    @if (Model.HasCurrentCard && Model.CurrentCard != null)
+    {
+        <div class="virtual-standalone-card" style="position: relative; margin-top: 20px;">
+            <div class="summary-header">
+                <i class="ri-shield-keyhole-line"></i>
+                <span>Virtual Card Details</span>
+
+                <form asp-controller="Card" asp-action="Deactivate" method="post" id="deleteCardForm" style="margin-left: auto;">
+                    @Html.AntiForgeryToken()
+                    <button type="button" class="btn-terminate-card" onclick="deleteVirtualCard()">
+                        <i class="ri-delete-bin-7-line"></i>
+                        <span>Delete Card</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="v-card-display-area">
+                <div class="nova-physical-skin">
+                    <div class="v-chip-gold"></div>
+                    <div class="v-card-logo">NOVA<span>BANK</span></div>
+                    <div class="v-num-display">@Model.CurrentCard.CardNumber</div>
+
+                    <div class="v-footer-info">
+                        <div class="v-field flex-2">
+                            <small>CARD HOLDER</small>
+                            <span>@User.Identity.Name?.ToUpper()</span>
+                        </div>
+                        <div class="v-field">
+                            <small>VALID THRU</small>
+                            <span>@Model.CurrentCard.ExpiryDate</span>
+                        </div>
+                        <div class="v-field">
+                            <small>CVV</small>
+                            <span>@Model.CurrentCard.Cvv</span>
+                        </div>
+                        <div class="v-field">
+                            <small>STATUS</small>
+                            <span>ACTIVE</span>
+                        </div>
+                        <div class="v-visa">
+                            <i class="ri-visa-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span class="animate" style="--i:3;"></span>
+        </div>
+    }
+    else
+    {
+        <div class="virtual-standalone-card empty-card-state" style="position: relative; margin-top: 20px;">
+            <div class="summary-header">
+                <i class="ri-shield-flash-line"></i>
+                <span>Virtual Card Service</span>
+            </div>
+
+            <div class="v-card-placeholder-area">
+                <div class="placeholder-content">
+                    <i class="ri-bank-card-2-line"></i>
+                    <h3>You do not have a virtual card.</h3>
+                    <p>Create a virtual card that you can use securely for your online purchases.</p>
+
+                    <form asp-controller="Card" asp-action="Create" method="post" id="createVirtualCardForm">
+                        @Html.AntiForgeryToken()
+                        <button type="button" class="btn-create-vcard" onclick="submitCreateCard('createVirtualCardForm')">
+                            <i class="ri-add-fill" style="color: #12121f !important; font-weight: 800; font-size: 1.3rem !important;"></i>
+                            <span>Create Virtual Card</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <span class="animate" style="--i:3;"></span>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="accountSummaryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary account-switcher-custom">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Switch Account View</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group p-3">
+
+                    @if (Model.DemandAccount != null)
+                    {
+                        <div class="mb-4">
+                            <button type="button" class="list-group-item list-group-item-action bg-dark text-white border-secondary rounded shadow py-3"
+                                    onclick="updateSummaryCard('@Model.DemandAccount.AccountType', '@Model.DemandAccount.Iban', '@Model.DemandAccount.Balance.ToString("N2") ₺', '@(Model.DemandAccount.CreatedAt?.ToString("dd.MM.yyyy") ?? "N/A")', false)">
+                                <div class="d-flex flex-column">
+                                    <strong style="color: #00ffcc; font-size: 1.1rem; font-weight: 600;">Checking Account</strong>
+                                    <small style="color: #00ffcc; opacity: 0.8; font-size: 0.85rem; margin-top: 4px; letter-spacing: 0.5px;">
+                                        @Model.DemandAccount.Iban
+                                    </small>
+                                </div>
+                            </button>
+                        </div>
+                    }
+
+                    @if (Model.TimeDepositAccount != null)
+                    {
+                        <div class="mb-2">
+                            <button type="button" class="list-group-item list-group-item-action bg-dark text-white border-secondary rounded shadow py-3"
+                                    onclick="updateSummaryCard('@Model.TimeDepositAccount.AccountType', '@Model.TimeDepositAccount.Iban', '@Model.TimeDepositAccount.Balance.ToString("N2") ₺', '@(Model.TimeDepositAccount.CreatedAt?.ToString("dd.MM.yyyy") ?? "N/A")', true)">
+                                <div class="d-flex flex-column">
+                                    <strong style="color: #00ffcc; font-size: 1.1rem; font-weight: 600;">Deposit Account</strong>
+                                    <small style="color: #00ffcc; opacity: 0.8; font-size: 0.85rem; margin-top: 4px; letter-spacing: 0.5px;">
+                                        @Model.TimeDepositAccount.Iban
+                                    </small>
+                                </div>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center p-4 border border-secondary rounded bg-black bg-opacity-25 mt-2">
+                            <p style="color: #00ffcc; font-size: 1rem; margin-bottom: 15px; font-weight: 500;">
+                                <i class="ri-information-line d-block mb-2" style="font-size: 1.5rem;"></i>
+                                You do not have a time deposit account yet.
+                            </p>
+
+                            <form asp-controller="Account" asp-action="CreateTimeDepositAccount" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-success w-100 py-2 shadow-sm"
+                                        style="color: #00ffcc; border-color: #00ffcc; font-weight: 600;">
+                                    <i class="ri-add-circle-line me-2"></i> Open Time Deposit Account
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateSummaryCard(type, iban, balance, date, isTimeDeposit) {
+        const typeEl = document.getElementById('sum-account-type');
+        const ibanEl = document.getElementById('sum-iban');
+        const balanceEl = document.getElementById('sum-balance');
+        const dateEl = document.getElementById('sum-date');
+        const deleteSection = document.getElementById('delete-time-deposit-section');
+
+        if (typeEl) typeEl.innerText = type;
+        if (ibanEl) ibanEl.innerText = iban;
+        if (balanceEl) balanceEl.innerText = balance;
+        if (dateEl) dateEl.innerText = date;
+
+        if (deleteSection) {
+            deleteSection.style.display = isTimeDeposit ? 'block' : 'none';
+        }
+
+        const modalEl = document.getElementById('accountSummaryModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+
+    function deleteVirtualCard() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Your virtual card will be permanently deactivated.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff4d4d',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel',
+            background: '#1a1a2e',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('deleteCardForm');
+                if (form) {
+                    form.submit();
+                }
+            }
+        });
+    }
+
+    function submitCreateCard(formId) {
+        Swal.fire({
+            title: 'Create Virtual Card?',
+            text: 'A new virtual card will be defined for your online shopping.',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#00ffcc',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Create',
+            cancelButtonText: 'Cancel',
+            background: '#1a1a2e',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.submit();
+                }
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get('showModal') === 'true') {
+            const modalEl = document.getElementById('accountSummaryModal');
+            if (modalEl) {
+                const myModal = new bootstrap.Modal(modalEl);
+                myModal.show();
+
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        }
+
+        const deleteSection = document.getElementById('delete-time-deposit-section');
+        if (deleteSection) {
+            deleteSection.style.display = 'none';
+        }
+    });
+</script>

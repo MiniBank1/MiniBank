@@ -1,0 +1,174 @@
+﻿@model Application.DTOs.DashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="transfer-page-wrapper">
+    <div class="internal-card">
+        <div class="internal-header">
+            <span>Welcome</span>
+            <span class="animate" style="--i:1;"></span>
+        </div>
+
+        <div class="internal-row" id="dashboard-top-row" style="display: flex; align-items: stretch; gap: 15px; flex-wrap: nowrap;">
+
+            <div class="internal-acc-box" id="account-box" style="position: relative; flex: 1 1 0;">
+                <span class="internal-label">MY ACCOUNT</span>
+                <div class="internal-acc-info">
+                    <strong id="active-iban">@(Model.DemandAccount?.Iban ?? "No IBAN Found")</strong>
+                    <small id="active-account-type">Current Account</small>
+                </div>
+                <div class="account-selector-arrow" data-bs-toggle="modal" data-bs-target="#accountModal"
+                     style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #42c1e8;">
+                    <i class="ri-arrow-down-s-line" style="font-size: 24px;"></i>
+                </div>
+                <span class="animate" style="--i:2;"></span>
+            </div>
+
+            <div class="internal-acc-box internal-active" id="balance-box" style="flex: 1 1 0;">
+                <span class="internal-label">AVAILABLE BALANCE</span>
+                <div class="internal-acc-info">
+                    <strong id="active-balance">@(Model.DemandAccount?.Balance.ToString("N2") ?? "0.00") ₺</strong>
+                    <small>Real-time Balance</small>
+                </div>
+                <span class="animate" style="--i:3;"></span>
+            </div>
+
+            <div class="internal-acc-box" id="interest-section" style="flex: 1 1 0;">
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <div>
+                        <span class="internal-label">INTEREST RATE</span>
+                        <div class="internal-acc-info">
+                            <strong>%@(Model.TimeDepositInterestRate?.ToString("N2") ?? "0.00")</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="internal-label">LAST APPLIED</span>
+                        <div class="internal-acc-info">
+                            <strong>@(Model.LastInterestDate?.ToString("dd.MM.yyyy HH:mm") ?? "Not applied yet")</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="internal-label">NEXT INTEREST</span>
+                        <div class="internal-acc-info">
+                            <strong>@(Model.NextInterestDate?.ToString("dd.MM.yyyy HH:mm") ?? "Not available")</strong>
+                        </div>
+                    </div>
+                </div>
+                <span class="animate" style="--i:4;"></span>
+            </div>
+
+            <div class="internal-submit-wrapper" style="margin-left: auto; align-self: center; margin-bottom:30px; position: relative;">
+
+                <a href="/Transfer/Transfer"
+                   class="internal-confirm-btn"
+                   style="width:auto; min-width:180px; display:inline-block; text-align:center; text-decoration:none;">
+
+                    Make a Transfer
+                </a>
+
+                <span class="animate" style="--i:5;"></span>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="transaction-container" style="margin-top: 25px; position: relative;">
+        <div class="transaction-square-card">
+            <h2 class="transaction-title">Last Processes</h2>
+            <div class="transaction-list">
+                @foreach (var item in Model.RecentTransactions)
+                {
+                    <div class="transaction-row">
+                        <div class="transaction-meta">
+                            <i class="ri-coins-line"></i>
+                            <div>
+                                <span class="type-label">@item.TransactionType</span><br />
+                                <span class="date-label">@item.CreatedAt?.ToString("dd.MM.yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="transaction-amount" style="color: @(item.IsIncoming ? "#28a745" : "#dc3545");">
+                            @(item.IsIncoming ? "+" : "-")@item.Amount.ToString("N2") ₺
+                        </div>
+                    </div>
+                }
+            </div>
+            <span class="animate" style="--i:6;"></span>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="accountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e1e2f, #2c2c54); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h5 class="modal-title" style="color: white;">Select Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (Model.DemandAccount != null)
+                {
+                    <div class="account-option" onclick="selectAccount('@Model.DemandAccount.Iban', 'Demand Account', '@Model.DemandAccount.Balance.ToString("N2")')" style="padding: 15px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <div style="color: #42c1e8; font-weight: bold;">Demand Account</div>
+                        <div style="color: white; font-size: 14px;">@Model.DemandAccount.Iban</div>
+                    </div>
+                }
+
+                @if (Model.HasTimeDepositAccount && Model.TimeDepositAccount != null)
+                {
+                    <div class="account-option" onclick="selectAccount('@Model.TimeDepositAccount.Iban', 'Time Deposit Account', '@Model.TimeDepositAccount.Balance.ToString("N2")')" style="padding: 15px; cursor: pointer;">
+                        <div style="color: #42c1e8; font-weight: bold;">Time Deposit Account</div>
+                        <div style="color: white; font-size: 14px;">@Model.TimeDepositAccount.Iban</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        updateAccountLayout(false);
+    });
+
+    function updateAccountLayout(isTimeDeposit) {
+        const accountBox = document.getElementById('account-box');
+        const balanceBox = document.getElementById('balance-box');
+        const interestSection = document.getElementById('interest-section');
+
+        if (!accountBox || !balanceBox || !interestSection) return;
+
+        if (isTimeDeposit) {
+            interestSection.classList.add("show");
+
+            accountBox.style.flex = "1 1 0";
+            balanceBox.style.flex = "1 1 0";
+        } else {
+            interestSection.classList.remove("show");
+
+            accountBox.style.flex = "1.6 1 0";
+            balanceBox.style.flex = "1.6 1 0";
+        }
+    }
+
+    function selectAccount(iban, type, balance) {
+        document.getElementById('active-iban').innerText = iban;
+        document.getElementById('active-balance').innerText = balance + " ₺";
+
+        const typeLabel = document.getElementById('active-account-type');
+        if (typeLabel) typeLabel.innerText = type;
+
+        if (type.includes("Time Deposit")) {
+            updateAccountLayout(true);
+        } else {
+            updateAccountLayout(false);
+        }
+
+        var myModalEl = document.getElementById('accountModal');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        if (modal) modal.hide();
+    }
+</script>

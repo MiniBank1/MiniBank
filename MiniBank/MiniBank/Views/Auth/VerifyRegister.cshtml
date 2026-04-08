@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Verify Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify your account - Nova Bank</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <form asp-action="VerifyRegister" method="post" autocomplete="off">
+                <h1>Nova <span>Bank</span> </h1>
+
+                <input type="hidden" name="Email" value="@Model.Email" />
+
+                <div class="input-box">
+                    <div class="input-field">
+                        <i class="ri-shield-check-fill"></i>
+                        <input type="text" placeholder="Verfiy Code" id="code" name="Code" required />
+                    </div>
+                </div>
+
+                
+                <div class="btn-container">
+                    <button type="submit" class="btn">Verify</button>
+                </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="success-msg" style="color: #ff4d4d; margin-top: 15px; text-align: center;">
+                        <strong>@TempData["SuccessMessage"]</strong>
+                    </div>
+                }
+            </form>
+      
+        </div>
+    </div>
+</body>
+</html>
