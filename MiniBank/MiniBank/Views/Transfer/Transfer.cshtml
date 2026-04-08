@@ -1,0 +1,235 @@
+﻿@model Application.DTOs.TransferPageDto
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="transfer-page-wrapper">
+    <div class="internal-card">
+        <div class="internal-header">
+            <i class="ri-arrow-left-right-fill"></i>
+            <span>Transfer Between my Accounts</span>
+        </div>
+
+        <form asp-action="TransferBetweenMyAccounts" method="post" id="internalTransferForm">
+            <input type="hidden" name="TransferDirection" id="directionInput" value="CURRENT_TO_TIMEDEPOSIT" />
+
+            <div class="internal-row">
+                <div id="sourceCard" class="internal-acc-box internal-active">
+                    <span class="internal-label">FROM</span>
+                    <div class="internal-acc-info">
+                        <strong id="sourceType">Current Account</strong>
+                        <small class="external-balance-wrapper">
+                            Balance: <span id="sourceBalance">@Model.DemandAccount.Balance.ToString("N2") ₺</span>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="internal-swap-container">
+                    <button type="button" class="internal-swap-btn" onclick="executeSwap()">
+                        <i class="ri-arrow-left-right-line" id="swapIcon"></i>
+                    </button>
+                </div>
+
+                <div id="targetCard" class="internal-acc-box">
+                    <span class="internal-label">WHERE</span>
+                    <div class="internal-acc-info">
+                        <strong id="targetType">Deposit Account</strong>
+                        <small id="targetBalance">@(Model.TimeDepositAccount?.Balance.ToString("N2") ?? "0.00") ₺</small>
+                    </div>
+                </div>
+
+                <div class="internal-amount-box">
+                    <span class="internal-label">AMOUNT</span>
+                    <div class="internal-input-wrapper">
+                        <input type="text" name="Amount" class="internal-input" placeholder="0.00">
+                        <span class="internal-currency">₺</span>
+                    </div>
+                </div>
+
+                <div class="internal-submit-wrapper">
+                    <button type="submit" class="internal-confirm-btn">Transfer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="external-card">
+        <div class="external-header">
+            <i class="ri-external-link-line"></i>
+            <span>Transfer to Another Account</span>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success mt-3">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger mt-3">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form asp-action="TransferToAnotherUser" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="SenderAccountId" id="selectedSenderId" value="@Model.DemandAccount.AccountId" />
+
+            <div class="external-row" style="display: flex; align-items: center; gap: 20px;">
+
+                <div class="external-acc-box external-active" data-bs-toggle="modal" data-bs-target="#accountModal" style="min-width: 230px; max-width: 230px;">
+                    <span class="external-label">SENDER ACCOUNT</span>
+                    <div class="external-acc-info">
+                        <strong id="active-account-name">Current Account</strong>
+                        <small id="active-account-iban">@Model.DemandAccount.Iban</small>
+                        <small class="external-balance-wrapper">
+                            Balance: <span id="active-account-balance">@Model.DemandAccount.Balance.ToString("N2") ₺</span>
+                        </small>
+                    </div>
+                    <div class="external-selector-icon">
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                </div>
+
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
+
+                    <div style="display: flex; gap: 14px;">
+                        <div style="flex: 1;">
+                            <span class="external-label">RECIPIENT FIRST NAME</span>
+                            <input type="text" name="ReceiverFirstName" class="external-input" placeholder="First name" style="width: 100%;">
+                        </div>
+
+                        <div style="flex: 1;">
+                            <span class="external-label">RECIPIENT LAST NAME</span>
+                            <input type="text" name="ReceiverLastName" class="external-input" placeholder="Last name" style="width: 100%;">
+                        </div>
+
+                        <div style="width: 160px;">
+                            <span class="external-label">AMOUNT</span>
+                            <div class="external-input-wrapper">
+                                <input type="text" name="Amount" class="external-input" placeholder="0.00">
+                                <span class="external-currency">₺</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 14px;">
+                        <div style="flex: 1.3;">
+                            <span class="external-label">RECIPIENT IBAN</span>
+                            <input type="text" name="ReceiverIban" class="external-input" placeholder="TR00 0000..." style="width: 100%;">
+                        </div>
+
+                        <div style="width: 170px;">
+                            <span class="external-label">TYPE</span>
+                            <select name="PaymentTypeId" class="external-input external-select" style="width: 100%;">
+                                @if (Model.PaymentTypes != null && Model.PaymentTypes.Any())
+                                {
+                                    foreach (var pType in Model.PaymentTypes)
+                                    {
+                                        <option value="@pType.PaymentTypeId">@pType.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">Select Type...</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div style="flex: 1;">
+                            <span class="external-label">DESCRIPTION</span>
+                            <input type="text" name="Description" class="external-input" placeholder="Note..." style="width: 100%;">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="external-submit-wrapper" style="display: flex; align-items: flex-end; padding-top: 18px;">
+                    <button type="submit" class="external-confirm-btn">Transfer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="accountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Choose Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <button type="button" class="list-group-item list-group-item-action bg-dark text-white border-secondary"
+                            onclick="selectAccount('@Model.DemandAccount.AccountId', '@Model.DemandAccount.Iban', '@Model.DemandAccount.Balance.ToString("N2") ₺', 'Checking Account')">
+                        <strong>Checking Account</strong><br>
+                        <small>@Model.DemandAccount.Iban</small>
+                    </button>
+                    @if (Model.TimeDepositAccount != null)
+                    {
+                        <button type="button" class="list-group-item list-group-item-action bg-dark text-white border-secondary"
+                                onclick="selectAccount('@Model.TimeDepositAccount.AccountId', '@Model.TimeDepositAccount.Iban', '@Model.TimeDepositAccount.Balance.ToString("N2") ₺', 'Deposit Account')">
+                            <strong>Deposit Account</strong><br>
+                            <small>@Model.TimeDepositAccount.Iban</small>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function executeSwap() {
+        const directionInput = document.getElementById('directionInput');
+        const swapIcon = document.getElementById('swapIcon');
+
+        const sourceT = document.getElementById('sourceType');
+        const sourceB = document.getElementById('sourceBalance');
+        const targetT = document.getElementById('targetType');
+        const targetB = document.getElementById('targetBalance');
+
+        if (!sourceT || !targetT || !sourceB || !targetB) {
+            console.error("Hata: Elementlerden biri eksik!");
+            return;
+        }
+
+        let tempType = sourceT.innerText;
+        let tempBalance = sourceB.innerText;
+
+        sourceT.innerText = targetT.innerText;
+        sourceB.innerText = targetB.innerText;
+
+        targetT.innerText = tempType;
+        targetB.innerText = tempBalance;
+
+        if (directionInput.value === "CURRENT_TO_TIMEDEPOSIT") {
+            directionInput.value = "TIMEDEPOSIT_TO_CURRENT";
+            swapIcon.style.transform = "rotate(180deg)";
+        } else {
+            directionInput.value = "CURRENT_TO_TIMEDEPOSIT";
+            swapIcon.style.transform = "rotate(0deg)";
+        }
+    }
+
+    function selectAccount(id, iban, balance, name) {
+        document.getElementById('selectedSenderId').value = id;
+        document.getElementById('active-account-name').innerText = name;
+        document.getElementById('active-account-iban').innerText = iban;
+        document.getElementById('active-account-balance').innerText = balance;
+
+        const topIbanDisplay = document.getElementById('active-iban');
+        if (topIbanDisplay) {
+            topIbanDisplay.innerText = iban;
+        }
+
+        var myModalEl = document.getElementById('accountModal');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        modal.hide();
+    }
+</script>

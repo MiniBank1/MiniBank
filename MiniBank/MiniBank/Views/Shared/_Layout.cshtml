@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/Dashboard/Index" class="logo">Nova Bank<span class="animate" style="--i:1;"></span></a>
+
+        <nav class="navbar">
+            <a href="/Home/Index" class="active">Home</a>
+            <a href="/Dashboard/Index">Dashboard</a>
+            <a href="/Account/Index">Accounts</a>
+            <a href="/Transfer/Transfer">Transfer</a>
+            <span class="animate" style="--i:2;"></span>
+        </nav>
+
+        <div class="header-right" style="display: flex; align-items: center; gap: 20px; position: relative;">
+            <a href="#" class="nav-notification" data-bs-toggle="modal" data-bs-target="#notificationModal"
+               style="color: #fff; font-size: 22px; text-decoration: none; position: relative;">
+                <i class="ri-notification-fill"></i>
+                <span id="notification-badge" style="display: none; position: absolute; top: -5px; right: -8px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 50%; border: 2px solid #01003f;">
+                    0
+                </span>
+            </a>
+
+            <a href="/Auth/Login" class="btn-logout-minimal" title="Log Out" style="color: #fff; font-size: 24px; text-decoration: none;">
+                <i class="ri-door-open-line"></i>
+                <span class="animate" style="--i:3;"></span>
+            </a>
+        </div>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+    @Html.AntiForgeryToken()
+
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: linear-gradient(135deg, #1e1e2f, #2c2c54); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
+                <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px;">
+                    <h5 class="modal-title" style="color: white; font-weight: 700; letter-spacing: 0.5px;">Recent Notifications</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="notificationList" style="max-height: 450px; overflow-y: auto; padding: 10px 25px;">
+                    <div class="text-center p-5">
+                        <div class="spinner-border" style="color: #42c1e8;" role="status"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.05); padding: 10px;">
+                    <button type="button" class="btn btn-sm w-100" data-bs-dismiss="modal" style="color: #aaa; font-size: 12px; border: none;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</body>
+</html>
+
+@Html.AntiForgeryToken()
+
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e1e2f, #2c2c54); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h5 class="modal-title" style="color: white; font-weight: 700;">Notifications</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="notificationList" style="max-height: 400px; overflow-y: auto; padding: 15px 25px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sayfa yüklendiğinde rozet sayısını çek
+    document.addEventListener('DOMContentLoaded', function () {
+        updateNotificationBadgeCount();
+
+        const modalElement = document.getElementById('notificationModal');
+        const listContainer = document.getElementById('notificationList');
+
+        modalElement.addEventListener('show.bs.modal', function () {
+            // Yükleniyor simgesi
+            listContainer.innerHTML = '<div class="text-center p-4"><div class="spinner-border text-info"></div></div>';
+
+            fetch('/Notification/GetRecent?count=10')
+                .then(res => res.json())
+                .then(data => {
+                    listContainer.innerHTML = '';
+
+                    // Sadece okunmamışları (isRead == false) filtreliyoruz
+                    const unreadNotifications = data.filter(n => n.isRead === false);
+
+                    if (unreadNotifications.length === 0) {
+                        listContainer.innerHTML = '<div class="text-center p-4" style="color: #666;">There is not any notification.</div>';
+                        updateNotificationBadgeCount(0); // Liste boşsa badge'i sıfırla
+                        return;
+                    }
+
+                    // Badge sayısını listenin uzunluğuyla güncelle
+                    updateNotificationBadgeCount(unreadNotifications.length);
+
+                    unreadNotifications.forEach(note => {
+                        const itemHtml = `
+                            <div class="notification-item" id="noti-${note.notificationId}"
+                                 style="display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+
+                                <i class="ri-notification-3-line" style="margin-right: 15px; color: #42c1e8; font-size: 20px;"></i>
+
+                                <div style="flex: 1;">
+                                    <div style="color: white; font-size: 13px;">${note.message}</div>
+                                    <div style="color: #888; font-size: 10px; margin-top: 4px;">
+                                        ${new Date(note.createdAt).toLocaleString('tr-TR')}
+                                    </div>
+                                </div>
+
+                                <button onclick="markAsReadAndRemove(${note.notificationId})"
+                                        style="background: transparent; border: 1px solid #42c1e8; color: #42c1e8; border-radius: 50%; width: 26px; height: 26px; cursor: pointer;">
+                                    <i class="ri-check-line"></i>
+                                </button>
+                            </div>`;
+                        listContainer.innerHTML += itemHtml;
+                    });
+                })
+                .catch(err => {
+                    listContainer.innerHTML = '<div class="text-center p-4 text-danger">Bağlantı hatası!</div>';
+                    console.error("Hata:", err);
+                });
+        });
+    });
+
+    // Rozeti güncelleyen yardımcı fonksiyon
+    function updateNotificationBadgeCount(count) {
+        const badge = document.getElementById('notification-badge');
+        if (!badge) return;
+
+        if (count !== undefined) {
+            applyBadgeStyle(badge, count);
+        } else {
+            // Eğer count verilmemişse sunucudan güncel durumu çek
+            fetch('/Notification/GetRecent?count=20')
+                .then(res => res.json())
+                .then(data => {
+                    const unread = data.filter(n => n.isRead === false).length;
+                    applyBadgeStyle(badge, unread);
+                });
+        }
+    }
+
+    function applyBadgeStyle(badge, count) {
+        if (count > 0) {
+            badge.innerText = count > 9 ? '9+' : count;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function markAsReadAndRemove(id) {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        const formData = new FormData();
+        formData.append('notificationId', id);
+
+        fetch('/Notification/MarkAsRead', {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': token },
+            body: formData
+        }).then(res => {
+            if (res.ok) {
+                const element = document.getElementById(`noti-${id}`);
+                element.style.opacity = '0';
+                element.style.transform = 'scale(0.8)';
+
+                setTimeout(() => {
+                    element.remove();
+
+                    // Kalanları say ve badge'i güncelle
+                    const remainingItems = document.querySelectorAll('.notification-item').length;
+                    updateNotificationBadgeCount(remainingItems);
+
+                    if (remainingItems === 0) {
+                        document.getElementById('notificationList').innerHTML = '<div class="text-center p-4" style="color: #666;">There is not any notification.</div>';
+                    }
+                }, 300);
+            }
+        });
+    }
+</script>

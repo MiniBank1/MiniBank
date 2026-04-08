@@ -1,0 +1,104 @@
+﻿@model Application.DTOs.RegisterDto
+@using MiniBank.Controllers
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Form</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <script src="js/site.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrapper register-wrapper">
+            <div class="form-box" id="login-form">
+                <form asp-action="Register" class="form-group" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <h1>Register</h1>
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="error-msg" style="color: #ff4d4d; margin-bottom: 15px; text-align: center;">
+                            <strong>@TempData["ErrorMessage"]</strong>
+                        </div>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="success-msg" style="color: #28a745; margin-bottom: 15px; text-align: center;">
+                            <strong>@TempData["SuccessMessage"]</strong>
+                        </div>
+                    }
+
+                    <div asp-validation-summary="All" style="color: #ff4d4d; margin-bottom: 15px; text-align: center;"></div>
+
+                    <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-id-card-fill"></i>
+                            <input asp-for="TcNo" type="text" placeholder="TC No" />
+                            <span asp-validation-for="TcNo" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-user-line"></i>
+                            <input asp-for="UserName" type="text" placeholder="User Name" />
+                            <span asp-validation-for="UserName" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-user-line"></i>
+                            <input asp-for="UserSurname" type="text" placeholder="User Surname" />
+                            <span asp-validation-for="UserSurname" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-mail-line"></i>
+                            <input asp-for="Email" type="text" placeholder="Email" />
+                            <span asp-validation-for="Email" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-box">
+                        <div class="input-field">
+                            <i class="ri-lock-password-fill"></i>
+                            <input asp-for="Password" type="password" placeholder="Password" />
+                            <span asp-validation-for="Password" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+
+                        <div class="input-field">
+                            <i class="ri-lock-password-fill"></i>
+                            <input asp-for="ConfirmPassword" type="password" placeholder="Confirim Password" />
+                            <span asp-validation-for="ConfirmPassword" style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 6px;"></span>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit" class="btn">Register</button>
+                    </div>
+                </form>
+
+                <div class="register-link">
+                    <p>Do you already have an account? <a href="/Auth/Login">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
